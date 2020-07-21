@@ -1,0 +1,1114 @@
+	types
+	string = seq of char;
+	Condition = <Lacerations>|<Fracture>|<SpinalInjury>|<Children>|<Cardiac>|<nil>;
+	Treatment = <Plaster>|<DischargeHome>|<StitchBandage>|<PlasterCast>|<Medication>|<MoveAdultWard>|<MoveChildrenWard>|<ECG>|<Bed>|<Monitoring>|<RESUS>|<nil>;
+	RoomName = <Consulting>|<Resus>|<Radio>|<Plaster>|<Waiting>;
+	Specialisation = <Radiologist>|<Orderly>|<PlasterSpecialist>|<RESUSTeam>|<Receptionist>;
+	Gender = <Male>|<Female>;
+	EquipmentName = <Plaster>|<XRayMachine>|<SpineBoard>|<TrolleyBed>|<Wheelchair>|<Ultrasound>|<Defibrillator>|<Oxygen>|<ECG>;
+	TreatmentPlace = <ChildWard>|<AdultWard>|<Home>;
+	Severity = <Minor>|<Sever>|<nil>;
+	
+	Time::		
+				hour : int
+				minute : int
+				second : int;
+	
+	TreatmentSystem ::
+				id:int
+				condition : <nil>|Condition 	
+				priority: int
+				sevirity: Severity
+				startSessionTime: Time
+				endSessionTime: <nil>|Time
+				actualSessionTime: int|<nil>
+				tratmentLitst: set of Treatment;
+				
+	Patient :: 	
+		id: int
+		name: string
+		phone: string
+		gender: <nil>|Gender		 
+		age: int
+		address: string		
+		isServed: bool
+		ReceptionistNote: string
+		priority: <nil>|int
+		treatmentCourse:<nil>| TreatmentSystem
+		treatmentPlace:TreatmentPlace|<nil>;
+	Equipment ::
+			id: int
+			Name: EquipmentName;
+
+
+	Room ::		id: int
+				type: RoomName
+				equipment: set of Equipment
+				availablity: bool
+				staffInCharge: set of Staff|<nil>
+				consultantInCharge: set of Consultant
+				patient: <nil>|Patient;
+
+	WaitingList ::	
+				receptionist: Staff
+				waitingRoom: Room
+				patientsList: seq of Patient;
+				
+	Staff ::	
+		id: int
+		name: string
+		phone: string  
+		gender: <nil>|Gender 
+		specialisation: Specialisation
+		availability: bool
+		treatedPatients: seq of Patient|<nil>
+		currentPatient: <nil>|Patient
+	;
+				
+	Consultant:: 
+		id: int
+		name: string
+		phone: string  
+		gender: <nil>|Gender 
+		availability: bool
+		treatedPatients: seq of Patient
+		currentPatient: <nil>|Patient
+	;
+	Report::
+	patientsList: seq of Patient
+	staffList: seq of Staff
+	consultantsList: seq of Consultant
+	roomsList: set of Room
+	equipList: set of Equipment
+	;
+ values 
+		treatmentSystem1:TreatmentSystem=mk_TreatmentSystem(1,<Lacerations>,1,<Minor>,mk_Time(2,3,59),mk_Time(5,3,52),<nil>,{<Plaster>,<DischargeHome>});
+ 		treatmentSystem2 : TreatmentSystem = mk_TreatmentSystem(2,<Children>,4,<Minor>,mk_Time(4,6,10),<nil>,0,{});
+		treatmentSystem3 : TreatmentSystem = mk_TreatmentSystem(3,<SpinalInjury>,3,<Minor>,mk_Time(0,0,0),<nil>,0,{});
+		treatmentSystem4 : TreatmentSystem = mk_TreatmentSystem(4,<Fracture>,2,<Minor>,mk_Time(0,0,0),<nil>,0,{});
+ 		treatmentSystem5 : TreatmentSystem = mk_TreatmentSystem(5,<Fracture>,2,<Minor>,mk_Time(0,0,0),<nil>,0,{});
+ 		treatmentSystem6 : TreatmentSystem = mk_TreatmentSystem(6,<Fracture>,2,<Minor>,mk_Time(0,0,0),<nil>,0,{});
+		treatmentSystem7 : TreatmentSystem = mk_TreatmentSystem(7,<Lacerations>,1,<Minor>,mk_Time(0,0,0),<nil>,0,{});
+ 		treatmentSystem8 : TreatmentSystem = mk_TreatmentSystem(8,<Lacerations>,1,<Minor>,mk_Time(0,0,0),<nil>,0,{});
+ 		treatmentSystem9 : TreatmentSystem = mk_TreatmentSystem(9,<Lacerations>,1,<Minor>,mk_Time(0,0,0),<nil>,0,{});
+ 		
+ 		
+ 		AllTreatments : seq of TreatmentSystem = [treatmentSystem1];
+ 		
+	 	patient1:Patient=mk_Patient(1,['A','b','e','l','r','a','h','m','a','n',' ',' ',' ','S','a','m','y'],['0','1','0','1','8','6','0','3','2','2','2'],<Male>,20,['5','b',',','D','a','h','e','r'],                  false,['n','o','t','e','-','p','1'],<nil>, treatmentSystem1,<Home>);
+ 		patient2:Patient=mk_Patient(2,['A','y','m','a','n',' ',' ',' ','M','e','d','h','a','t'], ['0','1','0','1','8','6','0','3','2','2','2'],<Male>,32,['6','a',',','N','a','s','r',' ','C','i','t','y'],  true,['n','o','t','e','-','p','2'], <nil>, treatmentSystem2,<nil>);
+ 		patient3:Patient=mk_Patient(3,['H','a','s','s','a','n',' ',' ',' ','T','a','l','a','a','t'], ['0','1','2','1','4','6','1','0','0','3','1'],<Male>,40,['5','6','g',',','G','i','z','a'],                  false,['n','o','t','e','-','p','3'],<nil>, treatmentSystem3,<nil>);
+ 		patient4:Patient=mk_Patient(4,['D','i','n','a',' ',' ',' ','S','h','r','e','e','f'],         ['0','1','0','1','6','7','6','5','2','1','3'],<Female>,51,['4','d',',','Z','a','m','a','l','e','k'],        false,['n','o','t','e','-','p','4'],<nil>, treatmentSystem4,<nil>);
+ 		patient5:Patient=mk_Patient(5,['S','a','l','m','a',' ',' ',' ','M','o','t','a','z'],         ['0','1','1','1','2','1','1','2','2','8','7'],<Female>,21,['1','3','g',',','H','e','l','i','p','l','e','s'],false,['n','o','t','e','-','p','5'],<nil>, treatmentSystem5,<nil>);
+ 		patient6:Patient=mk_Patient(6,['M','a','h','m','o','u','d',' ',' ',' ','S','e','i','f'],     ['0','1','2','1','7','2','5','5','4','7','6'],<Male>,13, ['2','3',',','A','l','m','a','z','a'],             false,['n','o','t','e','-','p','6'],<nil>, treatmentSystem6,<nil>);
+ 		patient7:Patient=mk_Patient(7,['N','a','b','i','l',' ',' ',' ','S','h','a','r','a','f'],     ['0','1','0','1','9','3','2','7','4','1','8'],<Male>,19, ['4','5','t',',','N','e','w','C','a','i','r','o'], false,['n','o','t','e','-','p','7'],<nil>, treatmentSystem7,<nil>);
+  		patient8:Patient=mk_Patient(8,['S','a','d','y',' ',' ',' ','S','h','r','e','e','f'],         ['0','1','1','1','8','6','3','9','3','0','8'],<Male>,21, ['4','c',',','T','a','g','a','m','o'],             false,['n','o','t','e','-','p','8'],<nil>, treatmentSystem8,<nil>);
+  		patient9:Patient=mk_Patient(9,['M','a','y',' ',' ',' ','S','h','a','d','y'],                 ['0','1','0','1','2','2','0','5','0','7','2'],<Female>,8,['4','3',',','R','a','m','s','e','s'],             false,['n','o','t','e','-','p','9'],<nil>, treatmentSystem9,<nil>);
+ 
+	AllPatients : seq of Patient = [patient1,patient2,patient3,patient4,patient5,patient6,patient7,patient8];
+
+    staff1:Staff=mk_Staff(1, ['A','m','i','r'],['0','1','0','0','9','9','4','8','4','7','0'],<Male>,<Receptionist>,false,<nil>,patient2);
+    staff2:Staff=mk_Staff(2, ['S','a','l','a','h'],['0','1','1','0','8','8','9','8','4','7','0'],<Male>,<PlasterSpecialist>,true,<nil>,<nil>);
+	staff3:Staff=mk_Staff(3, ['A','l','i'],['0','1','2','0','2','8','9','8','2','8','2'],<Male>,<Radiologist>,true,<nil>,<nil>);
+	staff4:Staff=mk_Staff(4, ['D','o','n','i','a'],['0','1','2','4','2','5','4','2','4','2','5'],<Female>,<Radiologist>,true,<nil>,<nil>);
+	staff5:Staff=mk_Staff(5, ['A','m','r'],['0','1','1','5','5','1','1','1','5','5','2'],<Male>,<Orderly>,true,<nil>,<nil>);
+	staff6:Staff=mk_Staff(6, ['S','a','r','a','h'],['0','1','5','3','5','1','1','1','3','5','1'],<Female>,<RESUSTeam>,true,<nil>,<nil>);
+	staff7:Staff=mk_Staff(7, ['S','a','l','m','a'],['0','1','0','2','5','5','2','5','3','5','1'],<Female>,<RESUSTeam>,true,<nil>,<nil>);
+	staff8:Staff=mk_Staff(8, ['D','o','a','a'],['0','1','1','4','5','6','5','6','6','5','1'],<Female>,<Orderly>,true,<nil>,<nil>);
+	
+	AllStaff: seq of Staff = [staff1,staff2,staff3,staff4,staff5,staff6,staff7];
+	
+	Consultant1:Consultant=mk_Consultant(1, ['S','a','m','y'],['0','1','1','1','9','9','4','8','4','7','0'],<Male>,false,[],patient1);
+    Consultant2:Consultant=mk_Consultant(2, ['S','a','y','e','d'],['0','1','2','0','4','4','9','8','4','7','0'],<Male>,true,[],<nil>);
+	Consultant3:Consultant=mk_Consultant(3, ['A','d','e','l'],['0','1','1','0','3','0','9','8','2','8','2'],<Male>,true,[],<nil>);
+	Consultant4:Consultant=mk_Consultant(4, ['S','o','n','i','a'],['0','1','1','3','2','5','3','2','3','2','5'],<Female>,true,[],<nil>);
+	Consultant5:Consultant=mk_Consultant(5, ['T','a','m','e','r'],['0','1','2','5','5','1','1','1','5','5','2'],<Male>,true,[],<nil>);
+	Consultant6:Consultant=mk_Consultant(6, ['S','o','a','d'],['0','1','5','4','5','2','2','2','4','5','2'],<Female>,true,[],<nil>);
+	Consultant7:Consultant=mk_Consultant(7, ['S','a','n','d','y'],['0','1','2','3','5','5','3','5','2','5','1'],<Female>,true,[],<nil>);
+	
+	AllConsultants: seq of Consultant = [Consultant1, Consultant2, Consultant3, Consultant4, Consultant5, Consultant6, Consultant7];
+	
+	Equipment1:Equipment= mk_Equipment(1,<Plaster>);
+	Equipment2:Equipment= mk_Equipment(2,<XRayMachine>);
+	Equipment3:Equipment= mk_Equipment(3,<SpineBoard>);
+	Equipment4:Equipment= mk_Equipment(4,<TrolleyBed>);
+	Equipment5:Equipment= mk_Equipment(5,<Wheelchair>);
+	Equipment6:Equipment= mk_Equipment(6,<Ultrasound>);
+	Equipment7:Equipment= mk_Equipment(7,<Defibrillator>);
+	Equipment8:Equipment= mk_Equipment(8,<Oxygen>);
+	Equipment9:Equipment= mk_Equipment(9,<ECG>);
+	Equipment10:Equipment= mk_Equipment(10,<Plaster>);
+	Equipment11:Equipment= mk_Equipment(11,<XRayMachine>);
+	Equipment12:Equipment= mk_Equipment(12,<SpineBoard>);
+	Equipment13:Equipment= mk_Equipment(13,<TrolleyBed>);
+	Equipment14:Equipment= mk_Equipment(14,<Wheelchair>);
+	Equipment15:Equipment= mk_Equipment(15,<Ultrasound>);
+	Equipment16:Equipment= mk_Equipment(16,<Defibrillator>);
+	Equipment17:Equipment= mk_Equipment(17,<Oxygen>);
+	Equipment18:Equipment= mk_Equipment(18,<ECG>);
+	Equipment19:Equipment= mk_Equipment(19,<TrolleyBed>);
+	Equipment20:Equipment= mk_Equipment(20,<Wheelchair>);	
+	Equipment21:Equipment= mk_Equipment(21,<TrolleyBed>);
+	Equipment22:Equipment= mk_Equipment(22,<Wheelchair>);
+	Equipment23:Equipment= mk_Equipment(23,<TrolleyBed>);
+	Equipment24:Equipment= mk_Equipment(24,<Wheelchair>);
+	Equipment25:Equipment= mk_Equipment(25,<TrolleyBed>);
+	Equipment26:Equipment= mk_Equipment(26,<Wheelchair>);
+	Equipment27:Equipment= mk_Equipment(27,<TrolleyBed>);
+	Equipment28:Equipment= mk_Equipment(28,<Wheelchair>);
+	Equipment29:Equipment= mk_Equipment(29,<TrolleyBed>);
+	Equipment30:Equipment= mk_Equipment(30,<Wheelchair>);
+	Equipment31:Equipment= mk_Equipment(31,<Plaster>);
+	Equipment32:Equipment= mk_Equipment(32,<XRayMachine>);
+	Equipment33:Equipment= mk_Equipment(33,<SpineBoard>);
+	Equipment34:Equipment= mk_Equipment(34,<TrolleyBed>);
+	Equipment35:Equipment= mk_Equipment(35,<Wheelchair>);
+	Equipment36:Equipment= mk_Equipment(36,<Ultrasound>);
+	Equipment37:Equipment= mk_Equipment(37,<Defibrillator>);
+	Equipment38:Equipment= mk_Equipment(38,<Oxygen>);
+	Equipment39:Equipment= mk_Equipment(39,<ECG>);
+	
+	AllEquipments : set of Equipment ={Equipment1,Equipment2,Equipment3,Equipment4,Equipment5,Equipment6,Equipment7,Equipment8,Equipment9,Equipment10,Equipment11,Equipment12,Equipment13,Equipment14,
+Equipment15,Equipment16,Equipment17,Equipment18,Equipment19,Equipment20,Equipment21,Equipment22,Equipment23,Equipment24,Equipment25,Equipment26,Equipment27,Equipment28,Equipment29,Equipment30,Equipment31,Equipment32,Equipment33,Equipment34,Equipment35,Equipment36,Equipment37,Equipment38};
+	
+
+ 	room1:Room=mk_Room(1,<Consulting>, {Equipment4,Equipment5}, true, <nil>,{Consultant1},patient1);
+ 	room2:Room=mk_Room(2,<Consulting>, {Equipment13,Equipment14}, true, <nil>,{Consultant2},<nil>);
+ 	room3:Room=mk_Room(3,<Consulting>, {Equipment19,Equipment20}, true, <nil>,{Consultant3},<nil>);
+ 	room4:Room=mk_Room(4,<Consulting>, {Equipment21,Equipment22}, true, <nil>,{Consultant4},<nil>);
+ 	room5:Room=mk_Room(5,<Consulting>, {Equipment22,Equipment23}, true, <nil>,{Consultant5},<nil>);
+ 	room6:Room=mk_Room(6,<Consulting>, {Equipment24,Equipment25}, true, <nil>,{Consultant6},<nil>);
+ 	room7:Room=mk_Room(7,<Resus>, {Equipment7,Equipment8,Equipment9,Equipment27,Equipment3}, true,{staff6,staff7},{},<nil>);
+ 	room8:Room=mk_Room(8,<Radio>, {Equipment2,Equipment6}, true,{staff4,staff5},{},<nil>);
+ 	room9:Room=mk_Room(9,<Plaster>, {Equipment1}, true,{staff2,staff8},{},<nil>);
+ 	
+ 	AllRooms : set of Room = {room1,room2,room3,room4,room5,room6,room7,room8,room9};
+	state AESystem of
+	Patients: seq of Patient
+	StaffList: seq of Staff
+	Consultants: seq of Consultant
+	Rooms: set of Room 
+	Waitinglist: WaitingList|<nil>
+	init initSystem == initSystem = mk_AESystem(AllPatients,AllStaff,AllConsultants,AllRooms,<nil>)
+   
+  end;
+ 
+operations 
+
+	--Add new Patient to the A&E department
+	addPatient:(Patient) ==> ()
+	addPatient (p) == 
+	(   
+		if (len Patients = 0)then(Patients := Patients ^ [p];)
+		else
+		(
+			for i in Patients do 
+			(
+				if (i.id <> p.id)then(Patients := Patients ^ [p];);
+			);
+		);
+	
+	);
+	
+	--Add new Staff member to the A&E department
+	addStaff:(Staff) ==> ()
+	addStaff (s) == 
+	(   
+	
+		StaffList := StaffList ^ [s];
+
+		
+	);
+	
+	
+	--Add new Consultant to the A&E department
+				addConsultant:(Consultant) ==> ()
+				addConsultant (c) == 
+				(   
+					Consultants := Consultants ^ [c];
+					
+					
+				);
+	
+	--Add new Room to the A&E department
+	addRoom:(Room)==>()
+	addRoom(r) ==(
+		Rooms := Rooms union {r};
+		
+	
+	);
+
+	--Remove a patient from A&E department Records
+	removePatient:(int) ==> ()
+	removePatient(id) == (
+		dcl count : int := 1;
+		dcl newPatients : seq of Patient := [];
+		
+		while (count < len Patients) do (
+			if (Patients(count).id <> id)
+			then (
+		
+				newPatients := newPatients ^ [Patients(count)];
+			);
+			count := count + 1;
+		);
+		Patients := newPatients;
+		
+	);	
+	
+	--Remove a Staff member from A&E department Records
+	removeStaff:(int) ==> ()
+	removeStaff(id) == (
+		dcl count : int := 1;
+		dcl newStaffList : seq of Staff := [];
+		while (count < len StaffList) do (
+			if (StaffList(count).id <> id)
+			then (
+				newStaffList := newStaffList ^ [StaffList(count)];
+			);
+			count := count + 1;
+		);
+		StaffList := newStaffList;	
+	);	
+	
+	--Remove a Consultant from A&E department Records
+	removeConsultant:(int) ==> ()
+	removeConsultant(id) == (
+		dcl count : int := 1;
+		dcl newConsultants : seq of Consultant := [];
+		while (count < len Consultants) do (
+			if (Consultants(count).id <> id and Consultants(count).availability = true)
+			then (
+				newConsultants := newConsultants ^ [Consultants(count)];
+			);
+			count := count + 1;
+		);
+		Consultants := newConsultants;	
+	);
+
+	
+	--Remove (close) a room in the A&E department
+	removeRoom:(int) ==> ()
+	removeRoom(id) == (
+		for all i in set Rooms do
+		(
+			if (i.id = id)
+			then (
+				Rooms := Rooms \ {i};
+			);
+		);
+ 
+	);
+	
+	--get patient by id
+	getPatientById:(int) ==> Patient | <nil>
+	getPatientById (patientID) == 
+	(   
+		dcl temp_Patient : Patient;
+		for p in Patients do 
+		(
+			if (p.id = patientID)
+			then(temp_Patient := p;
+			return temp_Patient
+		);
+	);
+	return <nil>;
+);
+				
+	
+	--get staff by id
+	getStaffById:(int) ==> Staff | <nil>
+	getStaffById (staffID) == 
+	(   
+		dcl temp_Staff : Staff;
+		for s in StaffList do 
+		(
+			if (s.id = staffID)
+			then(temp_Staff := s;
+			return temp_Staff;);
+		);
+		return <nil>;
+	);
+	
+	--get Consultant by id
+	getConsultantById:(int) ==> Consultant | <nil>
+	getConsultantById (ConsultantID) == 
+	(   
+		dcl temp_Consultant : Consultant;
+		for c in Consultants do 
+		(
+			if (c.id = ConsultantID)
+			then(temp_Consultant := c;
+			return temp_Consultant;
+			);
+		);
+		return <nil>;
+	);
+	
+	--get the room info by its id
+	getRoomByID:(int) ==> Room |<nil>
+	getRoomByID(id) == (
+		for all i in set Rooms do
+		(
+			if (i.id = id)
+			then (
+				return i;
+			);
+		);
+			 
+		return <nil>;
+	);
+	
+	--Return the patient that the consultat is reponsible of at the same moment
+	getCurrentPatientOfConsultant:(int) ==> Patient|<nil>
+	getCurrentPatientOfConsultant(id) == (
+		dcl count:nat:=1;
+			while (count < len Consultants)do
+			(
+				if(Consultants(count).id = id)
+				then(
+				  return Consultants(count).currentPatient;
+				);
+				count:=count+1;
+				
+			);
+			return <nil>;
+		
+	);
+	
+	
+	--Return the patient that the Staff is reponsible of at the same moment
+	getCurrentPatientOfStaff:(int) ==> Patient|<nil>
+	getCurrentPatientOfStaff(id) == (
+		dcl count:nat:=1;
+			while (count < len StaffList)do
+			(
+				if(StaffList(count).id = id)
+				then(
+				  return StaffList(count).currentPatient;
+				);
+				count:=count+1;
+				
+			);
+			return <nil>
+		
+	);
+	
+	--Get The Consultant of certain patient
+	getAssignedConsultant:(int) ==> Consultant|<nil>
+	getAssignedConsultant(id) == (
+		dcl count:nat:=1;
+		
+		while(count < len Consultants)do
+		(
+			if(Consultants(count).currentPatient.id = id)
+			then(
+				
+				return Consultants(count);
+			);
+			count:=count+1
+		);
+		return <nil>;
+	);
+	
+	--Get Te staff assigned to certain patient
+	getAssignedStaff:(int) ==>  Staff|<nil>
+	getAssignedStaff(id) == (
+	
+		dcl count:nat:=1;
+		
+		while(count < len StaffList)do
+		(
+			if(StaffList(count).currentPatient.id = id)
+			then(
+			
+				return StaffList(count);
+				
+			);
+			count:=count+1;
+		);
+		return <nil>;
+	);
+	
+	--get the location of a staff member
+	locateStaff:(int)==> Room|<nil>
+	locateStaff(id) == (
+		
+		for all x in  set Rooms do
+		(
+			if(x.staffInCharge <>  <nil>)
+			then(
+				for all s in set x.staffInCharge do
+				(
+					if(s.id = id)
+					then(
+						
+						return x;
+					);
+				);
+			);
+		);
+		return <nil>;
+	);
+		
+	--get the location of a consultant 
+	locateConsultant:(int)==> Room|<nil>
+	locateConsultant(id) == (
+		
+		for all x in  set Rooms do
+		(
+
+				for all s in set x.consultantInCharge do
+				(
+					if(s.id = id)
+					then(
+						return x;
+					);
+				);
+			);
+		
+		return <nil>;
+	);	
+	
+	-- get the location of certain Patient
+	locatePatient:(int)==> Room|<nil>
+	locatePatient(id) == (
+		
+		for all x in  set Rooms do
+		(
+			if(x.patient.id = id)
+			then(
+				return x;
+			);
+		);
+		return <nil>;
+	);
+
+		--Send the patient to the right ward or home
+	sendToTreatmentPlace:(int)*(bool)==> seq of Patient
+	sendToTreatmentPlace(id,home) == (
+		dcl count : int := 1;	
+		dcl newP : Patient;
+		while count < len Patients do (
+			if (Patients(count).id = id)
+			then (
+				if (home = false)
+				then (
+					newP := Patients(count);
+					if(newP.age > 17)
+					then(newP.treatmentPlace:=<AdultWard>);
+					if (newP.age<18)
+					then(newP.treatmentPlace:=<ChildWard>);	
+					removePatient(Patients(count).id);
+					addPatient(newP);			
+				);
+				if (home = true)
+				then(newP.treatmentPlace:=<Home>);	
+				removePatient(Patients(count).id);
+				addPatient(newP);			
+			);
+			
+			count := count + 1;
+		);
+		return Patients;
+	);
+	
+	--Change the Status of the patient True -> is served False -> not served
+	changePatientStatus:(int)*(bool)==> seq of Patient
+	changePatientStatus(id,s) == (
+		dcl count : int :=1;
+		dcl newP : Patient;
+		while (count < len Patients) do (
+			if(Patients(count).id = id)
+			then(
+				newP := Patients(count);
+				newP.isServed := s;
+				removePatient(Patients(count).id);
+				addPatient(newP);	
+			);
+			count := count + 1;
+		);	
+		return Patients;
+	);
+	
+	--Set the condition of the patient
+	setCondition:(int)*(Condition)==> seq of Patient
+	setCondition(id,c) == (
+		dcl count : int :=1;
+		dcl newP : Patient;
+		while (count < len Patients) do (
+			if(Patients(count).id = id)
+			then(
+				newP := Patients(count);
+				newP.treatmentCourse.condition :=c;	
+				removePatient(Patients(count).id);
+				addPatient(newP);				
+			);
+			count := count + 1;
+		);	
+		return Patients;
+	);
+	
+	--get the condition of the patient
+	getCondition:(int)==> Condition
+	getCondition(id)==(
+		dcl count : int :=1;
+		while (count < len Patients) do (
+			if(Patients(count).id = id)
+			then
+				
+				return Patients(count).treatmentCourse.condition;
+			
+			count := count + 1;
+		);
+		
+		return <nil>;
+	
+	);
+	
+	-- add the sevirity of the condition
+	setSevirity:(int)*(Severity)==> seq of Patient
+	setSevirity(id,s) == (
+		dcl count : int :=1;
+		dcl newP : Patient;
+		while (count < len Patients) do (
+			if(Patients(count).id = id)
+			then(
+				newP := Patients(count);
+				newP.treatmentCourse.sevirity :=s;	
+				removePatient(Patients(count).id);
+				addPatient(newP);				
+			);
+			count := count + 1;
+		);	
+		return Patients;
+	);
+	
+	
+	-- get the sevirity of condition
+	getSeverity:(int)==> Severity
+	getSeverity(id)==(
+		dcl count : int :=1;
+		while (count < len Patients) do (
+			if(Patients(count).id = id)
+			then(
+				return Patients(count).treatmentCourse.sevirity;
+			);
+			count := count + 1;
+		);	
+		return <nil>;
+	
+	);
+	
+	--add treatment to patient
+	addTreatment:(int)*(Treatment)==> seq of Patient
+	addTreatment(id,t) == (
+		dcl count : int :=1;
+		dcl newP : Patient;
+		while (count < len Patients) do (
+			if(Patients(count).id = id)
+			then(
+				newP := Patients(count);
+				newP.treatmentCourse.tratmentLitst := newP.treatmentCourse.tratmentLitst union {t};
+				removePatient(Patients(count).id);
+				addPatient(newP);				
+			);
+			count := count + 1;
+		);
+		return Patients;
+	);
+	
+	--get the lis of tratments 
+	getTreatmentList:(int)==> set of Treatment
+	getTreatmentList(id)==(
+		dcl count : int :=1;
+		while (count < len Patients) do (
+			if(Patients(count).id = id)
+			then(
+				return Patients(count).treatmentCourse.tratmentLitst;
+			);
+			count := count + 1;
+		);	
+		return {<nil>};
+	
+	);
+	
+	--get first valid Staff
+	getFirstAvailableStaff:(Specialisation) ==> <nil>|Staff
+	getFirstAvailableStaff(tempS)==
+	(
+		dcl count : int :=1;
+		while(count< len StaffList) do (
+			if(StaffList(count).specialisation = tempS and StaffList(count).availability = true)
+			then(
+				return StaffList(count);
+			);
+			count := count+1;	
+						
+		);
+		return <nil>;
+	);
+	
+		--get first avilable consultant
+		getFirstConsultant:() ==> <nil>|Consultant
+		getFirstConsultant()==
+		(
+			dcl count : int :=1;
+			while(count< len Consultants) do (
+				if(Consultants(count).availability = true)
+				then(
+					return Consultants(count);
+					
+				);
+				count := count+1;	
+							
+			);
+			return <nil>;
+		);
+		--setStaffAvilability
+		setStaffAvilability:(int)*(bool)==>seq of Staff |<nil>
+		setStaffAvilability(id,a)==(
+			dcl count: int:=1;
+			dcl newS: Staff;
+			while (count < len StaffList) do(
+				if(StaffList(count).id = id)
+				then(
+					newS:=StaffList(count);
+					removeStaff(newS.id);
+					newS.availability :=a;
+					addStaff(newS);
+				);
+			);
+			return <nil>
+		
+		);
+		--get the count of the patients in the Waiting list
+		patientInWaitingRoomCount:() ==> int
+		patientInWaitingRoomCount() ==
+		(
+			return len Waitinglist.patientsList;
+		);
+
+		--get the list of the patients in the Adult Ward Count
+		patientTransferedToAdultWard:() ==> int
+		patientTransferedToAdultWard() ==
+		(
+			dcl counter : int := 1;
+			dcl adultWardCount : int := 0;
+			while (counter < len Patients) do (
+				if (Patients(counter).treatmentPlace = <AdultWard>)
+				then (
+					adultWardCount := adultWardCount + 1;
+				);
+				counter := counter + 1;
+			);
+			return adultWardCount;
+		);
+						
+		--get the list of the patients in the Adult Ward Count
+		patientTransferedToChildWard:() ==> int
+		patientTransferedToChildWard() ==
+		(
+			dcl counter : int := 1;
+			dcl childWardCount : int := 0;
+			while (counter < len Patients) do (
+				if (Patients(counter).treatmentPlace = <ChildWard>)
+				then (
+					childWardCount := childWardCount + 1;
+				);
+				counter := counter + 1;
+			);
+			return childWardCount;
+		);
+
+
+		-- Generate a General Report Object containing All sequences
+		generateReport: () ==> Report
+		generateReport() ==
+		(
+		
+			dcl report : Report;
+			report.patientsList := AllPatients;
+			report.consultantsList := AllConsultants;
+			report.staffList := AllStaff;
+			report.roomsList := AllRooms;
+			report.equipList := AllEquipments;
+					
+			return report;
+		);
+
+		-- Set Treatment Place based on the age entered of the patient
+		decideAgeCategory: (int) ==> TreatmentPlace
+		decideAgeCategory(a) == (
+			if (a > 18) then (
+				return <AdultWard>;
+			)
+			else (
+				return <ChildWard>;
+			);
+		);
+
+		-- Get Staff Availability with id
+		getStaffAvailability:(int) ==> bool | <nil>
+		getStaffAvailability(id) == (
+			dcl staffList : seq of Staff := AllStaff;
+			dcl count : int := 1;
+			while (count < len AllStaff) do (
+				if (staffList(count).id = id) then (
+					staffList := AllStaff;
+					return staffList(count).availability;
+				);
+				count := count + 1;
+			);
+			staffList := AllStaff;
+			return <nil>;
+		);
+
+		--send 3 consultant to resus room
+		addConsultantsToResus:(int) ==>bool |<nil>
+			addConsultantsToResus(i)==
+			(
+				dcl count : int :=1;
+				dcl r: Room ;
+				dcl cnum :int :=0;
+				while(count< len Consultants) do (
+					if(Consultants(count).availability = true and cnum <3)
+					then(
+						r := getRoomByID(i);
+						r.consultantInCharge := r.consultantInCharge union {Consultants(count)};
+						cnum := cnum+1;
+					);
+					count := count+1;	
+								
+				);
+				return <nil>;
+			);
+			--Calculate Session Duration in minutes--
+			calculate_actualSessionDuration:(int) ==> seq of TreatmentSystem
+			calculate_actualSessionDuration(id) == (
+				dcl treatmentsDurations : seq of TreatmentSystem := AllTreatments;
+				dcl count : int := 1;
+				dcl actualSessionDurationHr : int := 0;
+				dcl actualSessionDurationMin : int := 0;
+				dcl actualSessionDurationSeconds : int := 0;
+						
+				while (count < len treatmentsDurations) do (
+					if (treatmentsDurations(count).id = id) then (
+						actualSessionDurationHr := treatmentsDurations(count).endSessionTime.hour - treatmentsDurations(count).startSessionTime.hour;
+						actualSessionDurationMin := treatmentsDurations(count).endSessionTime.minute - treatmentsDurations(count).startSessionTime.minute;
+						actualSessionDurationSeconds := treatmentsDurations(count).endSessionTime.second - treatmentsDurations(count).startSessionTime.second;
+						if (actualSessionDurationHr < 0) then (
+							actualSessionDurationHr := actualSessionDurationHr + (2*actualSessionDurationHr);
+						);
+						treatmentsDurations(count).actualSessionTime := (actualSessionDurationHr * 60) + actualSessionDurationMin;
+						return treatmentsDurations;
+					);
+					count := count + 1;
+				);
+				return treatmentsDurations;
+			);
+			
+			-- Set the priority of treatment of the patient
+			setPriority: (int) * (int) ==> seq of Patient
+			setPriority(id, p) == (
+				dcl count : int := 1;
+				dcl patList : seq of Patient := AllPatients;
+				while (count < len patList) do (
+					if (patList(count).id = id) then (
+						patList(count).priority := p;
+						return patList; 
+					);
+				count := count + 1;
+				);
+				return patList;
+			);
+			
+			--interrupt a Consultant
+				interruptConsultant:() ==> seq of Consultant
+				interruptConsultant() ==
+				(
+					dcl counter : int := 1;
+					dcl consultants : seq of Consultant := AllConsultants;
+					while (counter < len AllConsultants) do (
+						if (consultants(counter).currentPatient.priority < 3)
+						then (
+							
+								consultants(counter).availability := true;
+								addToWaitingList(consultants(counter).currentPatient);
+								return consultants;
+						);
+						counter := counter + 1;
+					);
+					return consultants;
+				);	
+				
+				-- addToWaitingList	
+				addToWaitingList:(Patient) ==>()
+				addToWaitingList(p)==
+				(
+					for i in Waitinglist.patientsList do
+					(
+						if(i.id<> p.id)
+						then
+						(
+						   Waitinglist.patientsList := Waitinglist.patientsList ^[p];
+						);
+					);
+				);
+				-- Assign Patient to the appropriate room, consultant and staff in the A&E department based on priority and condition
+				assignPatientToConsultant:(int)*(int) ==> Consultant|<nil>
+				assignPatientToConsultant(pID,consID)==
+				(
+					dcl newPatient: Patient;
+					dcl newCons: Consultant;
+					dcl count : int :=1;
+					while (count < len Patients) do(
+						if(Patients(count).id = pID)
+							then
+							(
+								newPatient := Patients(count);
+
+							);
+						count := count +1;
+					);
+					count :=1;
+					while (count < len Consultants) do (
+						if(Consultants(count).id = consID)
+							then
+							(
+								newCons := Consultants(count);
+								newCons.currentPatient := newPatient;
+								newCons.availability :=false;
+								removeConsultant(consID);
+								addConsultant(newCons);
+								return newCons;
+								
+							);
+						count := count +1;
+					);
+					
+					return <nil>;
+				);
+				
+
+
+
+-------------------------------------Abdelmajid/zeyads
+
+				getNumberOfAllPatient:() ==> int
+				getNumberOfAllPatient()==
+				(
+					  return len Patients;
+				);
+				
+				getNumberOfPatientAtRoom:(int) ==> int
+				getNumberOfPatientAtRoom(roomID)==
+				(
+					 dcl temp_no_ofPatient : int := 0;
+					 for all room in set Rooms do (
+							if(room.id = roomID)
+							then
+							(
+								if (room.patient <> <nil>)
+								then(temp_no_ofPatient:= 1;)
+								else (temp_no_ofPatient:= 0;);
+							)
+						);
+				   return temp_no_ofPatient;
+				);
+				
+				getConsultantPatients:(int) ==> seq of Patient
+				getConsultantPatients(consultantID)==
+				(
+					   dcl temp_Patients : seq of Patient := [];
+					   dcl counter : int :=1;
+					   while (counter < len Consultants) do(
+					   		if(Consultants(counter).id = consultantID)
+								then
+								(
+									temp_Patients := Consultants(counter).treatedPatients;
+								);
+					   		counter := counter + 1;
+					   );
+						 return temp_Patients; 
+				);
+				
+				getPatientList:() ==> seq of Patient
+				getPatientList() == 
+				(
+						return Patients;
+				);
+				
+				getEquipments:(int) ==> set of Equipment
+				getEquipments(roomID)==
+				(
+						dcl temp_roomEquipments : set of Equipment := {};
+						for all room in set Rooms do (
+							if(room.id = roomID)
+							then
+							(
+									temp_roomEquipments := room.equipment;
+							)
+						);
+						return temp_roomEquipments;
+				);
+				
+
+
+			checkEquipment:(int)*(int) ==> bool
+				checkEquipment(roomID, equipmentID)==
+				(
+						for all room in set Rooms do 
+						(
+								if (room.id = roomID)
+								then
+								(
+										for all equipment in set room.equipment do 
+										(
+											if(equipment.id = equipmentID)
+											then
+											(
+													return true;
+											);
+										);
+								);
+						);
+						return false;
+				);
+
+
+
+			AddPatienttoRoom: (Patient)*(int) ==> set of Room
+				AddPatienttoRoom(p,RID) == 
+				(
+					dcl newroom: Room;
+					for all room in set Rooms do (
+						if (room.id = RID and room.availablity) then 
+						(
+							newroom := mk_Room(room.id,room.type,room.equipment,false,room.staffInCharge,room.consultantInCharge,p);
+							removeRoom(room.id);	
+							addRoom(newroom);	
+						);
+					);
+					return Rooms;
+				);
+				
+				AddStafftoRoom: (int)*(Staff) ==> Room
+				AddStafftoRoom(RoomID,S) ==
+				(
+					dcl newstaff:set of Staff :={};
+					dcl newroom : Room;
+					dcl staff: Staff:= S;
+					for all room in set Rooms do(
+						if (room.id = RoomID and staff.availability = true) then
+						(
+									staff.availability := false;
+									newstaff:= room.staffInCharge union {staff};
+									newroom := mk_Room(room.id,room.type,room.equipment,room.availablity,newstaff,room.consultantInCharge,room.patient);
+									removeRoom(RoomID);	
+									addRoom(newroom);	
+							);
+									
+						);
+					return newroom;
+				);
+				
+				AddEquipmenttoRoom: (int)*(Equipment) ==> Room
+				AddEquipmenttoRoom(RoomID,E) ==
+				(
+					dcl newEquipment:set of Equipment:= {};
+					dcl newroom : Room;
+					for all room in set Rooms do(
+						if (room.id = RoomID) then
+						(
+									newEquipment:= room.equipment union {E};
+									newroom := mk_Room(room.id,room.type,newEquipment,room.availablity,room.staffInCharge,room.consultantInCharge,room.patient);		
+									removeRoom(RoomID);	
+									addRoom(newroom);			
+							);					
+						);
+					return newroom;
+				);
+				
+				AddConsultantToRoom:(int)*(Consultant) ==> Room
+				AddConsultantToRoom(RoomID,C) ==
+				(
+					dcl consultants:set of Consultant:= {};
+					dcl newroom : Room;
+					dcl consult : Consultant:= C;
+					for all room in set Rooms do(
+							if (room.id = RoomID and consult.availability = true) then
+							(	
+										consult.availability := false;
+										consultants:= room.consultantInCharge union {consult};
+										newroom := mk_Room(room.id,room.type,room.equipment,room.availablity,room.staffInCharge,consultants,room.patient);				
+										removeRoom(RoomID);	
+										addRoom(newroom);	
+								);
+										
+							);
+						return newroom;
+				);
+		
+			RemoveEquipmentFromRoom: (int)*(Equipment) ==> Room
+				RemoveEquipmentFromRoom(RID,E) ==
+				(
+					dcl newEquipment:set of Equipment:= {};
+					dcl newroom : Room;
+					for all room in set Rooms do(
+						if (room.id = RID) then
+						(
+									newEquipment:= room.equipment \ {E};
+									newroom := mk_Room(room.id,room.type,newEquipment,room.availablity,room.staffInCharge,room.consultantInCharge,room.patient);
+									removeRoom(room.id);	
+						  		addRoom(newroom);
+							);
+									
+						);
+					return newroom;
+				);
+					
+				RemoveStaffFromRoom: (int)*(Staff) ==> Room
+				RemoveStaffFromRoom(RoomID,S) ==
+				(
+					dcl newstaff:set of Staff:= {};
+					dcl newroom : Room;
+					dcl staff: Staff := S;
+					for all room in set Rooms do(
+						if (room.id = RoomID) then
+						(
+									staff.availability := true;
+									newstaff:= room.staffInCharge \ {staff};
+									newroom := mk_Room(room.id,room.type,room.equipment,room.availablity,newstaff,room.consultantInCharge,room.patient);
+									removeRoom(RoomID);	
+									addRoom(newroom);	
+							);				
+						);
+					return newroom;
+				);
+
+		
+		
+				RemoveConsultantFromRoom: (int)*(Consultant) ==> Room
+				RemoveConsultantFromRoom(RoomID,C) ==
+				(
+					dcl consultants:set of Consultant:= {};
+					dcl consu: Consultant := C;
+					dcl newroom : Room;
+					for all room in set Rooms do(
+						if (room.id = RoomID) then
+						(
+									consu.availability := true;
+									consultants:= room.consultantInCharge \ {consu};
+									newroom := mk_Room(room.id,room.type,room.equipment,room.availablity,room.staffInCharge,consultants,room.patient);
+									removeRoom(RoomID);	
+									addRoom(newroom);					
+							);				
+						);
+					return newroom;
+				);
+
+
+		
+		
+	
